@@ -1,0 +1,94 @@
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
+const Listing = require('./models/listing.js');
+let port = 8181;
+const path = require('path');
+
+app.set('views',path.join(__dirname,'views'));  
+app.use(express.static(path.join(__dirname,'public')));
+var methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// Connect to MongoDB
+connectToDatabase().then(() => {
+    console.log('Connected to MongoDB');
+}).catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+});
+
+// Function to connect to MongoDB
+async function connectToDatabase() {
+    await mongoose.connect('mongodb://localhost:27017/airbnb', {
+      
+    });
+}
+
+// Define a simple route
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+//Get and Save Sample Listing
+app.get('/testListing',(req,res) =>{
+    let sampleListing = new Listing({
+        title: "My new Villa",
+        description: "by the beach",
+        price:1200,
+        location:"Goa",
+        Country:"India"
+    })
+    sampleListing.save();
+    res.send("Successful saved");
+})
+app.get('/listings',async(req,res)=>{
+    
+    let listings = await Listing.find();
+    res.render('listing.ejs',{listings});
+
+})
+app.get('/listings/:id',async(req,res)=>{
+    let {id} = req.params;
+    let listing = await Listing.findById(id);
+        res.render('show.ejs',{listing});
+
+})
+app.get('/listings/:id/edit', async(req,res) =>{
+    let {id} = req.params;
+    let listing = await Listing.findById(id);
+    res.render('edit.ejs',{listing});
+})
+app.patch('/listings/:id',(req,res) =>{
+    let {id} = req.params;
+    let { title, description, image, price, location, country } = req.body;
+console.log(req.body);
+Listing.findByIdAndUpdate(id,{title,description,image,price,location,country},{new:true})
+.then((result)=>{
+    console.log(`updated ${result}`);
+    res.redirect('/listings');
+})
+.catch((err)=>{
+    console.log(`${err}`)
+})
+    // let listing = req.body;
+    // console.log(listing);
+})
+
+app.delete('/listings/:id',async(req,res)=>{
+    let {id} = req.params;
+    let listDeleted = await Listing.findByIdAndDelete(id);
+    console.log(listDeleted);
+    // .then((result)=>
+    // {
+    //     console.log('deleted list'+`${result}`)
+        res.redirect('/listings')
+    // })
+    // .catch((err)=>{
+    //     console.log(`Error ${err}`)
+    // })
+})
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});

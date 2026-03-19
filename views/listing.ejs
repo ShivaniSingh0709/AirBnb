@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <title>Edit</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+   <div class="cont">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      
+    </ul>
+  </div>
+</nav>
+
+   </div>
+   <br>
+   <br>
+    <!-- GRID CONTAINER -->
+    <div class="container listing-list">
+        
+        
+        <% if (listings && listings.length > 0) { %>
+            <% for(let listing of listings) { %>
+
+                <!-- EACH ITEM -->
+                <div class="listing-item">
+                    <a href="/listings/<%= listing.id %>"><img src="<%= listing.image %>" class="listing-image" /></a>
+
+                    <a href="/listings/<%= listing.id %>"><%= listing.title %></a>
+                    <p class="description"><%= listing.description %></p>
+                    <p class="price">&#8377;<%= listing.price %></p>
+                    <p class="location"><%= listing.location %></p>
+                    <p class="country"><%= listing.country %></p>
+
+               
+                </div>
+
+            <% } %>
+        <% } else { %>
+            <p>No data found</p>
+        <% } %>
+
+    </div>
+</body>
+</html>
