@@ -1,25 +1,154 @@
-.listing-list{
-    display:grid;
-      grid-template-columns: repeat(3, 1fr); /* 5 items per row */
-      gap: 20px;
-    list-style: none;
-    padding: 0;
-
+.card{
+  border:none;
+  margin-bottom: 2rem;
 }
-.listing-item {
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 10px;
-  background: #fff;
-}
-.listing-image{
-    width:100%;
-    height:250px;
-    object-fit: cover;
-  border-radius: 8px;
+/* General */
+body {
+  /* background-color: #f7f7f7; */
+  font-family: 'Segoe UI', sans-serif;
 }
 
+/* Card Layout */
+.listing-card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.listing-card {
+  background: transparent !important;
+}
+
+/* Hover Effect (IMPORTANT ⭐) */
+.listing-card:hover {
+  transform: scale(1.03);
+  /* box-shadow: 0 10px 25px rgba(0,0,0,0.15); */
+
+
+}
+
+
+
+/* Image */
+.image-wrapper {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.listing-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.listing-card:hover .listing-image {
+  transform: scale(1.1);
+}
+
+/* Text Styling */
+.card-body {
+  padding: 10px 5px;
+}
+
+.listing-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.listing-location {
+  font-size: 0.9rem;
+  color: #717171;
+  margin-bottom: 5px;
+}
+
+.listing-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.listing-price span {
+  font-weight: 400;
+  color: #717171;
+}
+
+/* Remove link styles */
+.listing-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Grid spacing fix */
+.row {
+  margin: 0;
+}
+.card-body{
+  padding: 0 !important;
+}
+.card-body a{
+  text-decoration: none;
+}
+.card-text{
+  font-weight: 400 !important;
+}
+.card-img-overlay{
+  opacity: 0;
+}
+.card-img-overlay:hover{
+  opacity: 0.3;
+  color: white;
+}
 .show-heading{
     margin-top: 20px;
     text-align: center;
+}
+.navbar{
+  height:5rem;
+  background-color: white;
+}
+.navbar-brand{
+  color: red;
+  font-size: 2rem;
+  padding-left: 10px;
+}
+.nav-link{
+  color:#222222 !important;
+}
+
+.f-info{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: #ebebeb;
+  height: 8rem;
+  align-items: space-evenly;
+  text-align: center;
+}
+.f-info-links a{
+  text-decoration: none;
+  color:#222222;
+}
+.f-info-links a:hover{
+  text-decoration: underline;
+}
+.f-info-links{
+  width:100%;
+}
+.f-info-socials{
+  width:100%;
+  font-size: 1.2rem;
+}
+.f-info-socials i{
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+.show-image {
+  height: 250px; /* fixed height is more consistent */
+  object-fit: cover;
+  border-radius: 12px;
 }

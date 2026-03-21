@@ -4,11 +4,14 @@ const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 let port = 8181;
 const path = require('path');
+const ejsMate = require('ejs-mate');
 
 app.set('views',path.join(__dirname,'views'));  
 app.use(express.static(path.join(__dirname,'public')));
+
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
+app.engine('ejs',ejsMate);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -47,6 +50,25 @@ app.get('/listings',async(req,res)=>{
     let listings = await Listing.find();
     res.render('listing.ejs',{listings});
 
+
+})
+app.get('/listings/new',(req,res)=>{
+    res.render('new.ejs');
+})
+app.post('/listings',(req,res)=>{
+    // console.log('added');
+    // let { title, description, image, price, location, country } = req.body;
+//    let listing = req.body.listing;
+//    console.log(listing);
+    const newListing = new Listing( req.body.listing);
+    newListing.save()
+    .then((result)=>{
+        console.log('saved listing')
+        res.redirect('/listings');
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
 })
 app.get('/listings/:id',async(req,res)=>{
     let {id} = req.params;
