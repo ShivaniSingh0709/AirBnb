@@ -2,119 +2,137 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
-let port = 8181;
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const methodOverride = require('method-override');
 
-app.set('views',path.join(__dirname,'views'));  
-app.use(express.static(path.join(__dirname,'public')));
+let port = process.env.PORT || 8181;
 
-var methodOverride = require('method-override');
+// Middleware & View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
-app.engine('ejs',ejsMate);
-
+app.engine('ejs', ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Connect to MongoDB
-async function connectToDatabase() {
+
+// ✅ CONNECT TO MONGODB AND START SERVER
+async function startServer() {
   try {
     const DB_URL =
-      process.env.MONGO_URI ||
-      "mongodb://localhost:27017/airbnb";
+      process.env.MONGO_URI || "mongodb://localhost:27017/airbnb";
 
-    await mongoose.connect(DB_URL);
+    await mongoose.connect(DB_URL, { serverSelectionTimeoutMS: 30000 });
+    console.log("✅ MongoDB Connected");
 
-    console.log("MongoDB Connected ✅");
+    // Start server AFTER DB connection
+    app.listen(port, () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+
   } catch (error) {
-    console.error("Error connecting to MongoDB ❌:", error);
+    console.error("❌ Error connecting to MongoDB:", error);
   }
 }
 
-// Call function AFTER definition
-connectToDatabase();
+// Call startServer to connect DB and start server
+startServer();
 
-// Define a simple route
+// ROUTES
+
+// Home redirect
 app.get("/", (req, res) => {
-    res.redirect("/listings");
+  res.redirect("/listings");
 });
-//Get and Save Sample Listing
-app.get('/testListing',(req,res) =>{
-    let sampleListing = new Listing({
-        title: "My new Villa",
-        description: "by the beach",
-        price:1200,
-        location:"Goa",
-        Country:"India"
-    })
-    sampleListing.save();
-    res.send("Successful saved");
-})
-app.get('/listings',async(req,res)=>{
-    
-    let listings = await Listing.find();
-    res.render('listing.ejs',{listings});
 
+// Test sample listing
+app.get('/testListing', async (req, res) => {
+  try {
+    const sampleListing = new Listing({
+      title: "My new Villa",
+      description: "by the beach",
+      price: 1200,
+      location: "Goa",
+      country: "India"
+    });
+    await sampleListing.save();
+    res.send("Successfully saved");
+  } catch (err) {
+    console.log(err);
+    res.send("Error saving sample listing");
+  }
+});
 
-})
-app.get('/listings/new',(req,res)=>{
-    res.render('new.ejs');
-})
-app.post('/listings',(req,res)=>{
-    // console.log('added');
-    // let { title, description, image, price, location, country } = req.body;
-//    let listing = req.body.listing;
-//    console.log(listing);
-    const newListing = new Listing( req.body.listing);
-    newListing.save()
-    .then((result)=>{
-        console.log('saved listing')
-        res.redirect('/listings');
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
-})
-app.get('/listings/:id',async(req,res)=>{
-    let {id} = req.params;
-    let listing = await Listing.findById(id);
-        res.render('show.ejs',{listing});
+// GET all listings
+app.get('/listings', async (req, res) => {
+  try {
+    const listings = await Listing.find();
+    res.render('listing.ejs', { listings });
+  } catch (err) {
+    console.log(err);
+    res.send("Error fetching listings");
+  }
+});
 
-})
-app.get('/listings/:id/edit', async(req,res) =>{
-    let {id} = req.params;
-    let listing = await Listing.findById(id);
-    res.render('edit.ejs',{listing});
-})
-app.patch('/listings/:id',(req,res) =>{
-    let {id} = req.params;
-    let { title, description, image, price, location, country } = req.body;
-console.log(req.body);
-Listing.findByIdAndUpdate(id,{title,description,image,price,location,country},{new:true})
-.then((result)=>{
-    console.log(`updated ${result}`);
+// NEW form
+app.get('/listings/new', (req, res) => {
+  res.render('new.ejs');
+});
+
+// CREATE listing
+app.post('/listings', async (req, res) => {
+  try {
+    const newListing = new Listing(req.body.listing);
+    await newListing.save();
     res.redirect('/listings');
-})
-.catch((err)=>{
-    console.log(`${err}`)
-})
-    // let listing = req.body;
-    // console.log(listing);
-})
+  } catch (err) {
+    console.log(err);
+    res.send("Error creating listing");
+  }
+});
 
-app.delete('/listings/:id',async(req,res)=>{
-    let {id} = req.params;
-    let listDeleted = await Listing.findByIdAndDelete(id);
-    console.log(listDeleted);
-    // .then((result)=>
-    // {
-    //     console.log('deleted list'+`${result}`)
-        res.redirect('/listings')
-    // })
-    // .catch((err)=>{
-    //     console.log(`Error ${err}`)
-    // })
-})
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// SHOW single listing
+app.get('/listings/:id', async (req, res) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    res.render('show.ejs', { listing });
+  } catch (err) {
+    console.log(err);
+    res.send("Listing not found");
+  }
+});
+
+// EDIT form
+app.get('/listings/:id/edit', async (req, res) => {
+  try {
+    const listing = await Listing.findById(req.params.id);
+    res.render('edit.ejs', { listing });
+  } catch (err) {
+    console.log(err);
+    res.send("Listing not found");
+  }
+});
+
+// UPDATE listing
+app.patch('/listings/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, image, price, location, country } = req.body;
+    await Listing.findByIdAndUpdate(id, { title, description, image, price, location, country },  { returnDocument: 'after' }) // ✅ modern option);
+    res.redirect('/listings');
+  } catch (err) {
+    console.log(err);
+    res.send("Error updating listing");
+  }
+});
+
+// DELETE listing
+app.delete('/listings/:id', async (req, res) => {
+  try {
+    await Listing.findByIdAndDelete(req.params.id);
+    res.redirect('/listings');
+  } catch (err) {
+    console.log(err);
+    res.send("Error deleting listing");
+  }
 });
