@@ -24,9 +24,10 @@ connectToDatabase().then(() => {
 
 // Function to connect to MongoDB
 async function connectToDatabase() {
-    await mongoose.connect('mongodb://localhost:27017/airbnb', {
-      
-    });
+const DB_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/airbnb';
+
+await mongoose.connect(DB_URL);      
+    
 }
 
 // Define a simple route

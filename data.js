@@ -9,8 +9,10 @@ connectToDatabase().then(() => {
 
 // Function to connect to MongoDB
 async function connectToDatabase() {
-    await mongoose.connect(DB_URL);
-}
+
+const DB_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/airbnb';
+
+await mongoose.connect(DB_URL);}
 
 const sampleListings = [
   {
