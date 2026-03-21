@@ -30,8 +30,8 @@ async function connectToDatabase() {
 }
 
 // Define a simple route
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get("/", (req, res) => {
+    res.redirect("/listings");
 });
 //Get and Save Sample Listing
 app.get('/testListing',(req,res) =>{
