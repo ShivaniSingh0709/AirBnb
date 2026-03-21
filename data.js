@@ -1,18 +1,22 @@
 const mongoose = require('mongoose');
 const Listing = require('./models/listing.js');
 // Connect to MongoDB
-connectToDatabase().then(() => {
-    console.log('Connected to MongoDB');
-}).catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-});
-
-// Function to connect to MongoDB
 async function connectToDatabase() {
+  try {
+    const DB_URL =
+      process.env.MONGO_URI ||
+      "mongodb://localhost:27017/airbnb";
 
-const DB_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/airbnb';
+    await mongoose.connect(DB_URL);
 
-await mongoose.connect(DB_URL);}
+    console.log("MongoDB Connected ✅");
+  } catch (error) {
+    console.error("Error connecting to MongoDB ❌:", error);
+  }
+}
+
+// Call function AFTER definition
+connectToDatabase();
 
 const sampleListings = [
   {

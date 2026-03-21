@@ -16,19 +16,22 @@ app.engine('ejs',ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Connect to MongoDB
-connectToDatabase().then(() => {
-    console.log('Connected to MongoDB');
-}).catch((error) => {
-    console.error('Error connecting to MongoDB:', error);
-});
-
-// Function to connect to MongoDB
 async function connectToDatabase() {
-const DB_URL = process.env.MONGO_URI || 'mongodb://localhost:27017/airbnb';
+  try {
+    const DB_URL =
+      process.env.MONGO_URI ||
+      "mongodb://localhost:27017/airbnb";
 
-await mongoose.connect(DB_URL);      
-    
+    await mongoose.connect(DB_URL);
+
+    console.log("MongoDB Connected ✅");
+  } catch (error) {
+    console.error("Error connecting to MongoDB ❌:", error);
+  }
 }
+
+// Call function AFTER definition
+connectToDatabase();
 
 // Define a simple route
 app.get("/", (req, res) => {
