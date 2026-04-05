@@ -1,37 +1,94 @@
 <% layout("/layouts/boilerplate") %>
 
 <body>
-    <div class="container mt-3">  <!-- ✅ ADD CONTAINER -->
+    <div class="container mt-3">
 
+        <!-- ✅ TITLE -->
         <div class="row">
             <div class="col-8 offset-2">
-                <h3>Listing details</h3>
+                <h3><%= listing.title %></h3>
             </div>
         </div>
 
-        <div class="card col-6 offset-2">
-            <img src="<%= listing.image %>" class="card-img-top show-image" />
+        <!-- ✅ LISTING CARD -->
+        <div class="row">
+            <div class="card col-6 offset-2 listing-card">
+                <img src="<%= listing.image %>" class="card-img-top show-image" />
 
-            <div class="card-body">
-                <p class="card-text">
-                    <%= listing.title %><br>
-                    <%= listing.description %><br>
-                    &#8377;<%= listing.price %><br>
-                    <%= listing.location %><br>
-                    <%= listing.country %><br>
-                </p>
+                <div class="card-body">
+                    <p class="card-text">
+                        <%= listing.description %><br>
+                        &#8377;<%= listing.price %><br>
+                        <%= listing.location %><br>
+                        <%= listing.country %><br>
+                    </p>
+                </div>
             </div>
         </div>
 
-        <div class="btns mt-3 col-6 offset-2 mb-5">
-            <a href="/listings/<%= listing._id %>/edit">
-                <button class="btn btn-dark" style="background-color: #fe424d;">Edit</button>
-            </a>
+        <!-- ✅ BUTTONS -->
+        <div class="row">
+            <div class="btns mt-3 col-6 offset-2 mb-5">
+                <a href="/listings/<%= listing._id %>/edit">
+                    <button class="btn btn-dark" style="background-color: #fe424d;">Edit</button>
+                </a>
 
-            <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="d-inline">
-                <button type="submit" class="btn btn-dark ">Delete</button>
-            </form>
+                <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" class="d-inline">
+                    <button type="submit" class="btn btn-dark">Delete</button>
+                </form>
+            </div>
         </div>
+
+
+        <!-- ✅ REVIEW FORM -->
+        <div class="row">
+            <div class="col-6 offset-2 mb-3">
+                        <hr/>
+
+                <h3>Leave a Review</h3>
+
+                <form method="POST" action="/listings/<%=listing._id%>/reviews">
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating:</label>
+                        <input type="range" id="rating" name="review[rating]" min="1" max="5" class="form-range">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="review" class="form-label">Add a Review:</label>
+                        <input type="text" id="review" name="review[comment]" class="form-control mb-2" placeholder="Write your review here...">
+                    </div>
+
+                    <button type="submit" class="btn btn-outline-dark">Submit Review</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ✅ REVIEWS SECTION -->
+        <% if(listing.reviews.length > 0) { %>
+            <div class="row">
+                <div class="col-6 offset-2">
+                    <hr/>
+                    <h3>Reviews</h3>
+
+                    <div class="row g-3 mb-3">
+                        <% for(review of listing.reviews) { %>
+                            <div class="col-md-6">
+                                <div class="card h-100 p-2">
+                                    <div class="card-body p-2">
+                                        <h5 class="card-title">Rating: <%= review.rating %>/5</h5>
+                                        <p class="card-text"><%= review.comment %></p>
+                                        <form method="POST" action="/listings/<%=listing._id%>/reviews/<%= review._id%>?_method=DELETE">
+                                            <button class="btn btn-sm btn-outline-danger">Delete Review</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+        <% } %>
 
     </div>
 </body>

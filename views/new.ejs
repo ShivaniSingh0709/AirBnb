@@ -3,7 +3,7 @@
 <body>
     <div class="row mt-3 mb-3">
         <div class="col-8 offset-2">
-            <form method="POST" action="/listings/">
+            <form method="POST" action="/listings/" novalidate class="needs-validation">
             
             <div class="container mt-4">
 
@@ -40,18 +40,20 @@
                         placeholder="description"
                         rows="4" 
                         required></textarea>
+                        <div class="invalid-feedback">Please enter description</div>
                 </div>
 
                 <!-- Price -->
                 <div class="mb-3">
                     <label class="form-label">Price</label>
                     <input 
-                        type="number" 
+                        type="text" 
                         name="listing[price]" 
                         class="form-control" 
                         placeholder="price"
                         
                         required>
+                        <div class="invalid-feedback">Please enter a valid price</div>
                 </div>
                 <div class="row">
                     <div class="col-6">
@@ -64,8 +66,9 @@
                                 class="form-control" 
                                 placeholder="location"
                                 required>
-                        </div>
+                              <div class="invalid-feedback">Please enter your location</div>
 
+                        </div>
                     </div>
                     <div class="col-6">
                              <!-- Country -->
@@ -77,6 +80,7 @@
                         class="form-control" 
                         placeholder="country"
                         required>
+                        <div class="invalid-feedback">Please enter your country</div>
                 </div>
                     </div>
                 </div>

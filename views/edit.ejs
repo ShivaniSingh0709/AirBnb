@@ -3,7 +3,7 @@
 <body>
     <div class="row mt-3 mb-3">
         <div class="col-8 offset-2">
-            <form method="POST" action="/listings/<%= listing._id %>?_method=PATCH">
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PATCH" novalidate class="needs-validation">
             
             <div class="container mt-4">
 
@@ -18,6 +18,8 @@
                         class="form-control" 
                         value="<%= listing.title %>" 
                         required>
+                    <div class="invalid-feedback">Please enter catchy title</div>
+
                 </div>
 
                 <!-- Image URL -->
@@ -27,7 +29,8 @@
                         type="text" 
                         name="image" 
                         class="form-control" 
-                        value="<%= listing.image %>">
+                        value="<%= listing.image %>"
+                        required>
                 </div>
 
                 <!-- Description -->
@@ -38,6 +41,8 @@
                         class="form-control" 
                         rows="4" 
                         required><%= listing.description %></textarea>
+                    <div class="invalid-feedback">Please enter description</div>
+
                 </div>
 
                 <!-- Price -->
@@ -49,6 +54,8 @@
                         class="form-control" 
                         value="<%= listing.price %>" 
                         required>
+                    <div class="invalid-feedback">Please enter valid price</div>
+
                 </div>
                 <div class="row">
                     <div class="col-6">
@@ -61,6 +68,8 @@
                                 class="form-control" 
                                 value="<%= listing.location %>" 
                                 required>
+                        <div class="invalid-feedback">Please enter location</div>
+
                         </div>
 
                     </div>
@@ -74,6 +83,8 @@
                         class="form-control" 
                         value="<%= listing.country %>" 
                         required>
+                    <div class="invalid-feedback">Please enter valid Country</div>
+
                 </div>
                     </div>
                 </div>
