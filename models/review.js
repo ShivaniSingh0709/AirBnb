@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { create } = require('./listing');
+const { authorize } = require('passport');
 
 const reviewSchema = new mongoose.Schema({
     comment:String,
@@ -11,6 +12,10 @@ const reviewSchema = new mongoose.Schema({
     createdAt:{
         type:Date,
         default:Date.now
+    },
+    author:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
     }
 });
 

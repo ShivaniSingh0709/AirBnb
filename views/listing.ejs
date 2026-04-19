@@ -1,6 +1,121 @@
 <% layout("/layouts/boilerplate") %>
+<style>
+  .filter-bar{
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .filters{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .filter{
+    text-align: center;
+    margin-right: 2rem;
+    margin-top:2rem;
+    opacity: 0.7;
+
+  }
+  .filter:hover{
+    opacity: 1;
+    cursor: pointer;
+  }
+.tax-toggle{
+  white-space: nowrap;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  border: 1px solid black;
+  height:3.5rem;
+  padding:1rem;
+}
+ .tax-info{
+  display: none;
+ }
+ .linkNav{
+  text-decoration: none;
+  color: black;
+  opacity: 0.7;
+ }
+ 
+</style>
 <body>
-  <div class="container mt-4">
+   <div class="container mt-4">
+    <div class="filter-bar">
+    
+  <div class="filters">
+      <div class="filter">
+        <a class="linkNav" href="/listings/category/Trending">
+          <div><i class="fa-solid fa-fire"></i></div>
+          <p> Trending</p>
+        </a>
+      </div>
+        <a class="linkNav" href="/listings/category/Iconic Cities">
+       <div class="filter">
+       <div><i class="fa-solid fa-city"></i></div> 
+        <p>Iconic Cities</p>
+      </div>
+      </a>
+      <a class="linkNav" href="/listings/category/Beach">
+       <div class="filter">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <p>Beachfront</p>
+      </div>
+      </a>
+      <a class="linkNav" href="/listings/category/rooms">
+       <div class="filter">
+        <i class="fa-solid fa-bed"></i>
+        <p>Rooms</p>
+      </div>
+      </a>
+       <a class="linkNav" href="/listings/category/Mountain">
+       <div class="filter">
+        <i class="fa-solid fa-mountain"></i>
+        <p>Mountains</p>
+      </div>
+      </a>
+       <a class="linkNav" href="/listings/category/Amazing Pools">
+       <div class="filter">
+        <i class="fa-solid fa-person-swimming"></i>
+        <p>Amazing Pools</p>
+      </div>
+       </a>
+        <a class="linkNav" href="/listings/category/Camping">
+       <div class="filter">
+       <i class="fa-solid fa-campground"></i>
+        <p>Camping</p>
+      </div>
+      </a>
+       <a class="linkNav" href="/listings/category/Arctic">
+       <div class="filter">
+      <i class="fa-solid fa-snowflake"></i>
+        <p>Arctic</p>
+      </div>
+      </a>
+       <a class="linkNav" href="/listings/category/Farms">
+       <div class="filter">
+       <i class="fa-solid fa-tractor"></i>
+        <p>Farms</p>
+      </div>
+      </a>
+       <a class="linkNav" href="/listings/category/Amazing Pools">
+        <div class="filter">
+        <i class="fa-solid fa-person-swimming"></i>
+        <p>Amazing Pools</p>
+      </div>
+      </a>
+       
+      
+    </div>    
+
+      <div class="tax-toggle">
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+          <label class="form-check-label" for="flexSwitchCheckChecked">Display Taxes</label>
+        </div>
+      </div>
+
+ </div>
+    
     <div class="row g-4">
 
       <% if (listings && listings.length > 0) { %>
@@ -14,7 +129,7 @@
               <div class="card listing-card">
 
                 <div class="image-wrapper">
-                  <img src="<%= listing.image %>" class="listing-image" />
+                  <img src="<%= listing.image.url %>" class="listing-image" />
                 </div>
 
                 <div class="card-body">
@@ -24,9 +139,11 @@
                     <%= listing.location %>, <%= listing.country %>
                   </p>
 
-                  <p class="listing-price">
-                    ₹<%= listing.price %> <span>/ night</span>
-                  </p>
+                 <p class="listing-price">
+                  ₹<%= listing.price %> 
+                  <span>/ night</span>  
+                  <span class="tax-info">+18% GST</span>
+                </p>
                 </div>
 
               </div>
@@ -44,3 +161,15 @@
     </div>
   </div>
 </body>
+<script>
+  const taxtoggle = document.querySelector('#flexSwitchCheckChecked');
+
+  taxtoggle.addEventListener('click', function () {
+   console.log('Checkbox state:', this.checked);
+   if (this.checked) {
+     document.querySelectorAll('.tax-info').forEach(el => el.style.display = 'inline');
+   } else {
+     document.querySelectorAll('.tax-info').forEach(el => el.style.display = 'none');
+   }
+  });
+</script>

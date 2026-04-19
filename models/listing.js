@@ -9,11 +9,8 @@ const listingScheme = new mongoose.Schema({
     description: String,
     price: Number,
     image: {
-        type:String,
-        default:"https://images.unsplash.com/photo-1723523422806-f35199efda7e?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        set:(v) =>
-            v === ""
-              ? "https://images.unsplash.com/photo-1723523422806-f35199efda7e?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D":v,
+     url: String,
+     filename: String
     },
     location: String,
     country:String,
@@ -22,7 +19,15 @@ const listingScheme = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref:'Review'
         }
-    ]
+    ],
+    Owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    },
+    category:{
+        type: String,
+        enum: ['Trending','Iconic Cities','Beachfront', 'Mountain','Rooms', 'Arctic', 'Camping', 'Farms','Amazing Pools']
+    }    
 });
 
 listingScheme.post('findOneAndDelete', async function(listing){ {

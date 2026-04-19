@@ -1,3 +1,11 @@
+if(process.env.NODE_ENV !== 'production'){
+  require('dotenv').config();
+}
+console.log(process.env);
+
+
+
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -80,14 +88,9 @@ app.get("/", (req, res) => {
 app.use((req, res, next) => {
   res.locals.success = req.flash('success');
     res.locals.error = req.flash('error'); // ✅ important
+    res.locals.currentUser = req.user; // ✅ important for navbar
 
   next();
-});
-
-app.get("/fakeUser", async (req, res) => {
-  const user = new User({ email: 'abc@gmail.com', username: 'abc' });
-  const newUser = await User.register(user, 'password');
-  res.send(newUser);
 });
 
 
